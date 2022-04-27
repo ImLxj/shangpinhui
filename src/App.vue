@@ -1,32 +1,20 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    <Header></Header>
+    <!-- 路由组件 -->
+    <router-view></router-view>
+    <!-- 当时登录或注册组件隐藏Footer组件，当时home、search组件显示 -->
+    <Footer v-show="$route.meta.show"></Footer>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import Header from './components/Header/index'
+import Footer from './components/Footer/index'
+export default {
+  name: 'App',
+  components: { Header, Footer }
 }
+</script>
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style></style>
