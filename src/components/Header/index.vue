@@ -76,15 +76,21 @@ export default {
       /*
         要注意的是：对象里面要传递params参数的时候需要给路由命名使用name属性，如果还是使用path属性会没有效果。
       */
-      this.$router.push({
-        name: 'search',
-        params: {
-          keyword: this.keyword
+      this.$router.push(
+        {
+          name: 'search',
+          params: {
+            keyword: this.keyword
+          },
+          query: {
+            keyword: '1123'
+          }
         },
-        query: {
-          keyword: '1123'
-        }
-      })
+        // 成功之后的回调
+        () => {},
+        // 失败的回调
+        () => {}
+      )
     }
   }
 }
