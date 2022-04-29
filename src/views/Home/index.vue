@@ -18,6 +18,7 @@ import Rank from '@/views/Home/Rank'
 import Like from '@/views/Home/Like'
 import Floor from '@/views/Home/Floor'
 import Brand from '@/views/Home/Brand'
+
 export default {
   name: 'Home',
   components: {
@@ -27,6 +28,9 @@ export default {
     Like,
     Floor,
     Brand
+  },
+  mounted() {
+    this.$store.dispatch('categoryList')
   }
 }
 </script>
