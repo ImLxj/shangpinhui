@@ -41,7 +41,7 @@ VueRouter.prototype.replace = function (location, resolve, reject) {
 const routes = [
   { path: '*', redirect: '/home' },
   { path: '/home', component: Home, meta: { show: true } },
-  { path: '/search/:keyword', name: 'search', component: Search, meta: { show: true } },
+  { path: '/search', name: 'search', component: Search, meta: { show: true } },
   { path: '/login', component: Login, meta: { show: false } },
   { path: '/register', component: Register, meta: { show: false } },
 ]

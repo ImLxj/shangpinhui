@@ -1,13 +1,15 @@
 <template>
   <div>
-    <h2>params参数：{{$route.params.keyword}}</h2>
-    <h2>query参数：{{$route.query.keyword}}</h2>
+    <type-nav></type-nav>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Search'
+  name: 'Search',
+  mounted() {
+    this.$store.dispatch('categoryList')
+  }
 }
 </script>
 

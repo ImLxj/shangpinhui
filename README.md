@@ -172,4 +172,68 @@ import 'nprogress/nprogress.css'
   nprogress.done()
 ```
 
-五、Vuex状态管理器
+#### 五、Vuex状态管理器
+
+vuex就是vue官方提供的可以统一管理数据的插件。
+
+#### 六、卡顿现象
+
+- 正常：事件触发非常频繁，而且每一次的触发，回调函数都要去执行（如果时间很短，而回调函数内部有计算，那么很可能出现浏览器卡顿）。
+- 节流：在规定的间隔事件范围内不会重复触发回调，只有大于这个时间间隔才会去触发回调，把频繁触发变为少量触发。
+- 防抖：前面的所有触发都被取消。最后一次执行在规定的时间之后才会触发，也就是说如果连续快速的触发只会执行一次。
+- lodash插件里面封装了节流和防抖可以直接拿过来使用。
+
+#### 七、三级联动路由跳转传参
+
+- 三级联动分为：一级标题、二级标题、三级标题
+
+- 当用户点击：Home模块跳转到search模块、以及会把选中的产品(产品名字、产品id)在路由跳转的时候进行参数传递。
+
+- 实现方法：将a标签设置自定义样式通过事件传递的event参数来获取当前的节点，每个节点里面有dataset属性可以获取自定义样式，判断有没有自定义样式开确定a标签和传递参数。
+
+  ```js
+  goSearch(event) {
+        let element = event.target
+        let { categoryname, category1id, category2id, category3id } =
+          element.dataset
+        let location = { name: 'search' }
+        let query = { categoryName: categoryname }
+        if (categoryname) {
+          if (category1id) {
+            query.category1Id = category1id
+          } else if (category2id) {
+            query.category2Id = category2id
+          } else {
+            query.category3Id = category3id
+          }
+          location.query = query
+          this.$router.push(location)
+        }
+      }
+  ```
+
+#### 八、过渡动画
+
+​	过渡动画前提是一个组件|标签有v-if|v-show属性才可以使用
+
+​	过渡动画:
+
+```vue
+// template里面
+<template>
+	<!-- xxxx 表示css样式名,前提transition嵌套的子元素里面必须含有v-if或v-show -->
+    <transition name="xxx">
+    	<div v-show="show"></div>
+    </transition>
+</template>
+<style>
+    .xxx-enter{} // 进入的起点
+    .xxx-enter-active{} // 进入的过程
+    .xxx-enter-to{} // 进入的终点
+    
+    .xxx-leave{} // 离开的起点
+    .xxx-leave-active{} // 离开的过程
+    .xxx-leave-to{} // 离开的终点
+</style>
+```
+
