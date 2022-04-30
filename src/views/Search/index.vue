@@ -6,10 +6,7 @@
 
 <script>
 export default {
-  name: 'Search',
-  mounted() {
-    this.$store.dispatch('categoryList')
-  }
+  name: 'Search'
 }
 </script>
 

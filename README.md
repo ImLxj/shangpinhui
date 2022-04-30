@@ -237,3 +237,77 @@ vuex就是vue官方提供的可以统一管理数据的插件。
 </style>
 ```
 
+#### 九、优化三级联动列表
+
+`type-nav`组件的作用是将home仓库里面的数据渲染到页面，在`home`组件当中通过dispatch来触发actions配置项，来改变home仓库里面的源数据实现页面的渲染，但是这样做，每次跳转到home页面都会从新发送一次请求，会影响性能，因为所需要的数据请求一次和请求多次数据的内容是一样的，这样我们通过根组件`app`来发送请求，因为app在整个过程中只会挂载一次。这样就解决了性能的问题。
+
+#### 十、合并query参数和params参数
+
+1. 第一种情况：先在搜索框输入内容点击搜索跳转到search组件，组件里面会`this.$route`会有params参数。然后点击三级联动列表跳转search标签传递query参数，会将原有的params替换为空对象。
+
+2. 第二种情况：先点击三级联动标签跳转search组件，传递query参数，然后在搜索框输入内容点击搜索跳转传递params参数，会把query参数顶替掉。
+
+3. 综上：这样我们在两种跳转之前做出判断，看看要跳转前`this.$route`里面有没有**query参数**或<b>query参数</b>
+
+   ```js
+   // 在Header组件里面判断当前this.$route对象里面有没有query参数
+   if (this.$route.query) {
+       let location = {
+           name: 'search',
+           params: {
+               keyword: this.keyword || undefined
+           }
+       }
+       location.query = this.$route.query
+       this.$router.push(location)
+   }
+   // 在type-nav组件里面判断当前的this.$route对面里面的params参数
+   if (this.$route.params) {
+       location.params = this.$route.params
+       this.$router.push(location)
+   }
+   ```
+
+   
+
+#### 十一、mock插件的使用
+
+```cmd
+// 安装问题，官网上没有--legacy-peer-deps 我提示了报错，加上就可以下载了
+npm install mockjs --legacy-peer-deps
+```
+
+使用步骤：
+
+1. 在src目录下创建mock文件夹。
+2. 准备json数据。
+3. 把mock里面所需要的图片资源放到public文件夹下面，在打包的时候图片资源会原封不动的放大dist文件夹里面。
+4. 使用mockjs模块实现虚拟数据。创建**mockServer.js**文件模拟数据。
+5. 要在入口文件导入**mockServer.js**，这样是为了让这个js文件能够执行一次。
+
+注意：请求mock数据不会向后端发送请求，请求会被浏览器拦截。
+
+#### 十二、Swiper插件的使用
+
+安装：
+
+```
+npm i swiper@5 --legacy-peer-deps // 默认安装最新版的最新版的可能会有问题
+```
+
+步骤：
+
+1. 引入swiper包
+
+   ```js
+   import swiper from 'swiper'
+   ```
+
+2. 引入样式
+
+   ```js
+   // 在入口问卷全局引入样式
+   import 'swiper/css/swiper.css'
+   ```
+
+3. 搭建结构

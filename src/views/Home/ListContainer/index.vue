@@ -5,9 +5,13 @@
       <div class="center">
         <!--banner轮播-->
         <div class="swiper-container" id="mySwiper">
-          <div class="swiper-wrapper">
+          <div
+            class="swiper-wrapper"
+            v-for="shuffling in bannerList"
+            :key="shuffling.id"
+          >
             <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
+              <img :src="shuffling.imgUrl" />
             </div>
           </div>
           <!-- 如果需要分页器 -->
@@ -92,8 +96,20 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+// 引入swiper
+import Swiper from 'swiper'
 export default {
-  name: 'ListContainer'
+  name: 'ListContainer',
+  mounted() {
+    // 发送请求
+    this.$store.dispatch('getBannerList')
+  },
+  computed: {
+    ...mapState({
+      bannerList: (state) => state.home.bannerList
+    })
+  }
 }
 </script>
 

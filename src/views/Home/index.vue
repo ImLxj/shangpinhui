@@ -28,9 +28,6 @@ export default {
     Like,
     Floor,
     Brand
-  },
-  mounted() {
-    this.$store.dispatch('categoryList')
   }
 }
 </script>

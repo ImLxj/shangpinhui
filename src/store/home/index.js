@@ -1,19 +1,27 @@
 // home的仓库
 // 导入接口
-import { requestsCategoryList } from '@/api'
+import { requestsCategoryList, reqBannerList } from '@/api'
 const state = {
-  categoryList: []
+  categoryList: [],
+  bannerList: []
 }
 const getters = {}
 const mutations = {
-  CATEGORYLIST(state, data) {
+  GETCATEGORYLIST(state, data) {
     state.categoryList = data
+  },
+  GETBANNERLIST(state, data) {
+    state.bannerList = data
   }
 }
 const actions = {
-  async categoryList(context) {
+  async getCategoryList(context) {
     let { data: result } = await requestsCategoryList()
-    context.commit('CATEGORYLIST', result)
+    context.commit('GETCATEGORYLIST', result)
+  },
+  async getBannerList(context) {
+    let { data: result } = await reqBannerList()
+    context.commit('GETBANNERLIST', result)
   }
 }
 

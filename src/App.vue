@@ -13,7 +13,12 @@ import Header from './components/Header/index'
 import Footer from './components/Footer/index'
 export default {
   name: 'App',
-  components: { Header, Footer }
+  components: { Header, Footer },
+  // 为了提高性能，将三级列表的请求只发送一次，因为不管是发送一次还是发送多次他里面的数据都是一样的
+  // 发送请求，将获取到的数据放到state里面
+  mounted() {
+    this.$store.dispatch('getCategoryList')
+  }
 }
 </script>
 

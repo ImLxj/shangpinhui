@@ -5,6 +5,10 @@ import router from './router'
 import TypeNav from '@/components/TypeNav'
 // 导入仓库
 import store from '@/store'
+// 导入mockServer.js文件
+import '@/mock/mockServer'
+// 引入swiper样式
+import 'swiper/css/swiper.css'
 // 注册全局组件传递两个参数，第一个参数是组件的名字，第二个参数是哪一个组件
 Vue.component(TypeNav.name, TypeNav)
 
@@ -13,5 +17,5 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store, // 这时在组件实例对象上就会多出来一个$store
-  render: h => h(App)
+  render: (h) => h(App)
 }).$mount('#app')

@@ -17,7 +17,7 @@
                 <h3 @mouseenter="changeBackground(index)">
                   <a
                     :data-categoryName="c1.categoryName"
-                    :data-category1Id="c1.categoryChild"
+                    :data-category1Id="c1.categoryId"
                     >{{ c1.categoryName }}</a
                   >
                 </h3>
@@ -136,12 +136,18 @@ export default {
           query.category3Id = category3id
         }
         location.query = query
-        // 跳转路由
-        this.$router.push(location)
+        // 跳转路由，在跳转之前要判断路由里面有没有params参数，如果有params参数则合并到一起
+        // 路由是应用于所有的路由组件，往哪个组件跳转传递的参数就在那个组件里面
+        if (this.$route.params) {
+          location.params = this.$route.params
+          this.$router.push(location)
+        }
       }
     }
   },
+  // 获取到home仓库里面的数据
   computed: {
+    // ...mapState要在计算属性里面使用，他的返回值就是vuex里面的state保存的数据
     ...mapState({
       // 使用对象形式左边式一个函数，这个函数会被调用一次
       // 还会默认传入一个参数，这个参数就是大仓库的state
