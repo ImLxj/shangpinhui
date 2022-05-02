@@ -4,23 +4,7 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
-          <div
-            class="swiper-wrapper"
-            v-for="shuffling in bannerList"
-            :key="shuffling.id"
-          >
-            <div class="swiper-slide">
-              <img :src="shuffling.imgUrl" />
-            </div>
-          </div>
-          <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
-
-          <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+        <Carousel :list="bannerList" />
       </div>
       <div class="right">
         <div class="news">
@@ -97,18 +81,45 @@
 
 <script>
 import { mapState } from 'vuex'
-// 引入swiper
-import Swiper from 'swiper'
 export default {
   name: 'ListContainer',
   mounted() {
     // 发送请求
     this.$store.dispatch('getBannerList')
   },
+  methods: {},
   computed: {
     ...mapState({
       bannerList: (state) => state.home.bannerList
     })
+  },
+  watch: {
+    bannerList: {
+      // 如果handler这个函数执行了，则表明bannerList里面已经从空数组==>有数据
+      // 但是watch只能确定数据的变化，但是不能保证数据变化了，页面上的v-for会执行
+      // 只有v-for执行完毕才会有结构，通过watch是没办法保证的。
+      handler(newValue, oldValue) {
+        immediate: true
+        this.$nextTick(() => {
+          // 将回调延迟到下次 DOM 更新循环之后执行。在修改数据之后立即使用它，然后等待 DOM 更新。
+          //这个时候 数据已经过来了 而且v-for也已经循环完毕了
+          var mySwiper = new Swiper(this.$refs.mySwiper, {
+            loop: true, // 循环模式选项
+
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true
+            },
+            // 如果需要前进后退按钮
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev'
+            }
+          })
+        })
+      }
+    }
   }
 }
 </script>

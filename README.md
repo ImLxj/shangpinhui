@@ -300,14 +300,68 @@ npm i swiper@5 --legacy-peer-deps // 默认安装最新版的最新版的可能�
 1. 引入swiper包
 
    ```js
-   import swiper from 'swiper'
+   import swiper from 'swiper/swiper-bundle'
    ```
 
 2. 引入样式
 
    ```js
    // 在入口问卷全局引入样式
-   import 'swiper/css/swiper.css'
+   import 'swiper/swiper-bundle.css'
    ```
 
 3. 搭建结构
+
+   ```html
+   <div class="swiper-container" id="mySwiper">
+       <div class="swiper-wrapper">
+           <div
+                class="swiper-slide"
+                v-for="shuffling in bannerList"
+                :key="shuffling.id"
+                >
+               <img :src="shuffling.imgUrl" />
+           </div>
+       </div>
+       <div class="swiper-pagination"></div>
+       <div class="swiper-button-prev"></div>
+       <div class="swiper-button-next"></div>
+   </div>
+   ```
+
+4. 初始化swiper实例
+
+   ```js
+   /*
+   	注意: 因为我们获取到轮播图数据是动态获取到的，如果通过mounted组价挂载完毕之后初始化轮播图，会出现没有数据的问题
+   		  如果使用updated钩子函数,虽然可以实现效果，但是如果data函数里面还有多个响应式数据，就会出现多次初始化问题
+   		 使用watch + nextTick 这样是最优的解决办法
+   */
+    watch: {
+       bannerList: {
+         handler(newValue, oldValue) {
+           this.$nextTick(() => {
+             var mySwiper = new Swiper(
+               this.$refs.mySwiper,
+               {
+                 loop: true, // 循环模式选项
+   
+                 // 如果需要分页器
+                 pagination: {
+                   el: '.swiper-pagination',
+                   clickable: true
+                 },
+                 // 如果需要前进后退按钮
+                 navigation: {
+                   nextEl: '.swiper-button-next',
+                   prevEl: '.swiper-button-prev'
+                 }
+               }
+             )
+           })
+         }
+       }
+     }
+   ```
+
+   

@@ -1,9 +1,10 @@
 // home的仓库
 // 导入接口
-import { requestsCategoryList, reqBannerList } from '@/api'
+import { requestsCategoryList, reqBannerList, reqFloorList } from '@/api'
 const state = {
   categoryList: [],
-  bannerList: []
+  bannerList: [],
+  floorList: []
 }
 const getters = {}
 const mutations = {
@@ -12,8 +13,12 @@ const mutations = {
   },
   GETBANNERLIST(state, data) {
     state.bannerList = data
+  },
+  GETFLOORLIST(state, data) {
+    state.floorList = data
   }
 }
+// 用来处理异步操作
 const actions = {
   async getCategoryList(context) {
     let { data: result } = await requestsCategoryList()
@@ -22,6 +27,10 @@ const actions = {
   async getBannerList(context) {
     let { data: result } = await reqBannerList()
     context.commit('GETBANNERLIST', result)
+  },
+  async getFloorList(context) {
+    let { data: result } = await reqFloorList()
+    context.commit('GETFLOORLIST', result)
   }
 }
 

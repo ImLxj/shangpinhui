@@ -9,5 +9,7 @@ export const requestsCategoryList = () => {
     method: 'GET'
   })
 }
-
+// 获取banner数据
 export const reqBannerList = () => mockRequest.get('banner')
+// 获取floor数据
+export const reqFloorList = () => mockRequest.get('floor')
