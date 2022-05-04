@@ -27,23 +27,39 @@ VueRouter.prototype.push = function (location, resolve, reject) {
     // 单独调用originPush函数他的this指向是window
     originPush.call(this, location, resolve, reject)
   } else {
-    originPush.call(this, location, () => { }, () => { })
+    originPush.call(
+      this,
+      location,
+      () => {},
+      () => {}
+    )
   }
 }
 VueRouter.prototype.replace = function (location, resolve, reject) {
   if (resolve && reject) {
     originPush.call(this, location, resolve, reject)
   } else {
-    originPush.call(this, location, () => { }, () => { })
+    originPush.call(
+      this,
+      location,
+      () => {},
+      () => {}
+    )
   }
 }
 
 const routes = [
-  { path: '*', redirect: '/home' },
+  { path: '/', redirect: '/home' },
   { path: '/home', component: Home, meta: { show: true } },
-  { path: '/search', name: 'search', component: Search, meta: { show: true } },
+  {
+    // 在params后面加一个问好表示可传可不传
+    path: '/search/:keyword?',
+    name: 'search',
+    component: Search,
+    meta: { show: true }
+  },
   { path: '/login', component: Login, meta: { show: false } },
-  { path: '/register', component: Register, meta: { show: false } },
+  { path: '/register', component: Register, meta: { show: false } }
 ]
 
 const router = new VueRouter({

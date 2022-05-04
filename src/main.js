@@ -20,5 +20,9 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store, // 这时在组件实例对象上就会多出来一个$store
+  // 全局事件总线
+  beforeCreate() {
+    Vue.prototype.$bus = this
+  },
   render: (h) => h(App)
 }).$mount('#app')

@@ -11,15 +11,21 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchList.categoryName">
+              {{ searchList.categoryName }}<i @click="removeCategoryName">×</i>
+            </li>
+            <li class="with-x" v-if="searchList.keyword">
+              {{ searchList.keyword }}<i @click="removeKeyword">×</i>
+            </li>
+            <li class="with-x" v-if="searchList.trademark">
+              {{ searchList.trademark.split(':')[1]
+              }}<i @click="removeTrademark">×</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @trademarkInfo="trademarkInfo" />
 
         <!--details-->
         <div class="details clearfix">
@@ -142,11 +148,72 @@ export default {
       }
     }
   },
+  beforeMount() {
+    // 在发请求之前将需要传递给接口的数据进行整理
+    Object.assign(this.searchList, this.$route.query, this.$route.params)
+  },
   mounted() {
-    this.$store.dispatch('getSearchList')
+    this.getSearchData()
+  },
+  methods: {
+    getSearchData() {
+      this.$store.dispatch('getSearchList')
+    },
+    getEmpty() {
+      this.searchList.category3Id = ''
+      this.searchList.category2Id = ''
+      this.searchList.category1Id = ''
+    },
+    // 删除面包屑
+    removeCategoryName() {
+      this.searchList.categoryName = ''
+      // 清空id
+      this.getEmpty()
+      // 重新发起请求
+      this.getSearchData()
+      // 跳转路由，为的是清空参数。
+      if (this.$route.params) {
+        this.$router.push({
+          name: 'search',
+          params: { keyword: this.$route.params.keyword }
+        })
+      }
+    },
+    removeKeyword() {
+      this.searchList.keyword = ''
+      this.getSearchData()
+      // 通知header组件清空文本框里面的信息
+      this.$bus.$emit('clear')
+      this.$router.push({
+        name: 'search',
+        query: this.$route.query
+      })
+    },
+    // 自定义事件的回调函数
+    trademarkInfo(trademark) {
+      this.searchList.trademark = `${trademark.tmId}:${trademark.tmName}`
+      // 重新发起请求
+      this.getSearchData()
+    },
+    removeTrademark() {
+      this.searchList.trademark = ''
+      this.getSearchData()
+    }
   },
   computed: {
     ...mapGetters(['goodsList', 'attrsList', 'trademarkList'])
+  },
+  // 因为mounted只是组件挂载完毕执行一次,再次点击查询按钮或者传递参数就不会再发请求了，这样我们需要监听路由的变化,当路由里面的参数发生变化时，再次发起请求
+  watch: {
+    $route(newValue, oldValue) {
+      // 重新队数据进行整理
+      Object.assign(this.searchList, this.$route.query, this.$route.params)
+      console.log(this.searchList)
+      // 再次发起请求
+      this.getSearchData()
+      // 清空上一次传入的 1、2、3级列表的id
+      this.getEmpty()
+    }
   }
 }
 </script>
