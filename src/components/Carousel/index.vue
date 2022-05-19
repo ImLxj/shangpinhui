@@ -13,7 +13,7 @@
 
 <script>
 // 引入swiper
-import Swiper from 'swiper/swiper-bundle.js'
+import Swiper from 'swiper'
 export default {
   name: 'Carousel',
   props: ['list'],

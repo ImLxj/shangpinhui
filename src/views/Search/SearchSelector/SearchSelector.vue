@@ -22,7 +22,11 @@
       <div class="fl key">{{ attrs.attrName }}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(attrValue, index) in attrs.attrValueList" :key="index">
+          <li
+            v-for="(attrValue, index) in attrs.attrValueList"
+            :key="index"
+            @click="attrInfo(attrs, attrValue)"
+          >
             <a>{{ attrValue }}</a>
           </li>
         </ul>
@@ -43,6 +47,11 @@ export default {
     // 以为要发送的数据在父组件内 需要子组件给父组件传递参数 ==> 自定义事件
     trademarkSend(trademark) {
       this.$emit('trademarkInfo', trademark)
+    },
+    // 获取商品属性
+    attrInfo(attrs, attrValue) {
+      // 通过自定义事件给父组件传参
+      this.$emit('attrInfo', attrs, attrValue)
     }
   }
 }

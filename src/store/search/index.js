@@ -22,6 +22,7 @@ const mutations = {
 }
 const actions = {
   async getSearchList({ commit }, params = {}) {
+    console.log(params)
     const { data: res } = await reqSelectSearch(params)
     commit('GETSELECTSEARCH', res)
   }

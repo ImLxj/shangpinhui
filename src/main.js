@@ -5,6 +5,8 @@ import router from './router'
 import TypeNav from '@/components/TypeNav'
 // 将轮播图注册为全局组件
 import Carousel from '@/components/Carousel'
+// 将分页器注册成为全局组件
+import Pagination from '@/components/Pagination'
 // 导入仓库
 import store from '@/store'
 // 导入mockServer.js文件
@@ -14,6 +16,7 @@ import 'swiper/swiper-bundle.css'
 // 注册全局组件传递两个参数，第一个参数是组件的名字，第二个参数是哪一个组件
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carousel.name, Carousel)
+Vue.component(Pagination.name, Pagination)
 
 Vue.config.productionTip = false
 

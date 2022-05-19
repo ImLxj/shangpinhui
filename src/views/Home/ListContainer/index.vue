@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import Carousel from '@/components/Carousel'
 import { mapState } from 'vuex'
 export default {
   name: 'ListContainer',
@@ -87,39 +88,12 @@ export default {
     // 发送请求
     this.$store.dispatch('getBannerList')
   },
+  components: { Carousel },
   methods: {},
   computed: {
     ...mapState({
       bannerList: (state) => state.home.bannerList
     })
-  },
-  watch: {
-    bannerList: {
-      // 如果handler这个函数执行了，则表明bannerList里面已经从空数组==>有数据
-      // 但是watch只能确定数据的变化，但是不能保证数据变化了，页面上的v-for会执行
-      // 只有v-for执行完毕才会有结构，通过watch是没办法保证的。
-      handler(newValue, oldValue) {
-        immediate: true
-        this.$nextTick(() => {
-          // 将回调延迟到下次 DOM 更新循环之后执行。在修改数据之后立即使用它，然后等待 DOM 更新。
-          //这个时候 数据已经过来了 而且v-for也已经循环完毕了
-          var mySwiper = new Swiper(this.$refs.mySwiper, {
-            loop: true, // 循环模式选项
-
-            // 如果需要分页器
-            pagination: {
-              el: '.swiper-pagination',
-              clickable: true
-            },
-            // 如果需要前进后退按钮
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev'
-            }
-          })
-        })
-      }
-    }
   }
 }
 </script>

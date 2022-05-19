@@ -197,7 +197,7 @@ export default {
       position: absolute;
       background: #fafafa;
       z-index: 999;
-      overflow: hidden;
+      // overflow: hidden;
 
       .all-sort-list2 {
         .item {
@@ -268,11 +268,11 @@ export default {
             }
           }
 
-          /* &:hover {
+          &:hover {
             .item-list {
               display: block;
             }
-          } */
+          }
         }
         .cur {
           background-color: skyblue;

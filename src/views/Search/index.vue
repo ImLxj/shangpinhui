@@ -11,45 +11,61 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
+            <!-- 分类的面包屑 -->
             <li class="with-x" v-if="searchList.categoryName">
               {{ searchList.categoryName }}<i @click="removeCategoryName">×</i>
             </li>
+            <!-- 关键字的面包屑 -->
             <li class="with-x" v-if="searchList.keyword">
               {{ searchList.keyword }}<i @click="removeKeyword">×</i>
             </li>
+            <!-- 品牌的面包屑 -->
             <li class="with-x" v-if="searchList.trademark">
               {{ searchList.trademark.split(':')[1]
               }}<i @click="removeTrademark">×</i>
+            </li>
+            <!-- 商品属性的面包屑 -->
+            <li
+              class="with-x"
+              v-for="(item, index) in searchList.props"
+              :key="index"
+              @click="removeAttr(index)"
+            >
+              {{ item.split(':')[1] }}<i @click="removeTrademark">×</i>
             </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @trademarkInfo="trademarkInfo" />
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isOne }">
+                  <a href="#" @click.prevent="changeOrder('1')"
+                    >综合
+                    <template v-if="isOne">
+                      <span v-if="isAsc">⬆</span>
+                      <span v-else>⬇</span>
+                    </template>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
+                <li></li>
+                <li :class="{ active: isTwo }">
+                  <a href="#" @click.prevent="changeOrder('2')"
+                    >价格
+                    <template v-if="isTwo">
+                      <span v-if="isAsc">⬆</span>
+                      <span v-else>⬇</span>
+                    </template>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
-                </li>
+                <!-- <li>
+                  <a href="#">价格</a>
+                </li> -->
               </ul>
             </div>
           </div>
@@ -91,35 +107,8 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <!-- 分页器 -->
+          <Pagination :pageNo="30" :pageSize="3" :total="91" :continues="5" />
         </div>
       </div>
     </div>
@@ -140,7 +129,8 @@ export default {
         category3Id: '',
         categoryName: '',
         keyword: '',
-        order: '',
+        // 默认是综合且降序
+        order: '1:asc',
         pageNo: 1,
         pageSize: 10,
         props: [],
@@ -157,7 +147,7 @@ export default {
   },
   methods: {
     getSearchData() {
-      this.$store.dispatch('getSearchList')
+      this.$store.dispatch('getSearchList', this.searchList)
     },
     getEmpty() {
       this.searchList.category3Id = ''
@@ -189,19 +179,77 @@ export default {
         query: this.$route.query
       })
     },
+    // 删除标签
+    removeTrademark() {
+      this.searchList.trademark = ''
+      this.getSearchData()
+    },
+    // 删除品牌属性的面包屑
+    removeAttr(index) {
+      // 删除数组当中的属性
+      this.searchList.props.splice(index, 1)
+      this.getSearchData()
+    },
     // 自定义事件的回调函数
     trademarkInfo(trademark) {
       this.searchList.trademark = `${trademark.tmId}:${trademark.tmName}`
       // 重新发起请求
       this.getSearchData()
     },
-    removeTrademark() {
-      this.searchList.trademark = ''
+    attrInfo(attrs, attrValue) {
+      //  ["属性ID:属性值:属性名"]
+      console.log(attrs, attrValue)
+      const props = `${attrs.attrId}:${attrValue}:${attrs.attrName}`
+      // 对数组进行去重
+      if (this.searchList.props.indexOf(props) === -1) {
+        this.searchList.props.push(props)
+      }
       this.getSearchData()
+    },
+    // 处理排序的函数
+    changeOrder(flag) {
+      // 传入的形参是表明是否是综合还是价格
+      let originFlag = this.searchList.order.split(':')[0]
+      let originSort = this.searchList.order.split(':')[1]
+      let newOrder = ''
+      if (flag === originFlag) {
+        newOrder = `${originFlag}:${originSort === 'desc' ? 'asc' : 'desc'}`
+      } else {
+        // 点击的不是同一个按钮
+        newOrder = `${flag}:${'desc'}`
+      }
+      this.searchList.order = newOrder
+      //#region
+      /* if (flag === '1') {
+        if (this.searchList.order === '1:desc') {
+          this.searchList.order = '1:asc'
+        } else {
+          this.searchList.order = '1:desc'
+        }
+      } else {
+        if (this.searchList.order === '2:desc') {
+          this.searchList.order = '2:asc'
+        } else {
+          this.searchList.order = '2:desc'
+        }
+      } */
+      //#endregion
     }
   },
   computed: {
-    ...mapGetters(['goodsList', 'attrsList', 'trademarkList'])
+    ...mapGetters(['goodsList', 'attrsList', 'trademarkList']),
+    isOne() {
+      return this.searchList.order.indexOf('1') != -1
+    },
+    isTwo() {
+      return this.searchList.order.indexOf('2') != -1
+    },
+    isAsc() {
+      return this.searchList.order.indexOf('asc') != -1
+    },
+    isDesc() {
+      return this.searchList.order.indexOf('desc') != -1
+    }
   },
   // 因为mounted只是组件挂载完毕执行一次,再次点击查询按钮或者传递参数就不会再发请求了，这样我们需要监听路由的变化,当路由里面的参数发生变化时，再次发起请求
   watch: {
