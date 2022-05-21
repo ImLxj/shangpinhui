@@ -63,9 +63,6 @@
                     </template>
                   </a>
                 </li>
-                <!-- <li>
-                  <a href="#">价格</a>
-                </li> -->
               </ul>
             </div>
           </div>
@@ -74,9 +71,9 @@
               <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
+                    <router-link :to="`/detail/${goods.id}`"
                       ><img :src="goods.defaultImg"
-                    /></a>
+                    /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -108,7 +105,13 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <Pagination :pageNo="30" :pageSize="3" :total="91" :continues="5" />
+          <Pagination
+            :pageNo="searchList.pageNo"
+            :pageSize="searchList.pageSize"
+            :total="total"
+            :continues="5"
+            @getPageNo="getPageNo"
+          />
         </div>
       </div>
     </div>
@@ -117,7 +120,7 @@
 
 <script>
 import SearchSelector from './SearchSelector/SearchSelector'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'Search',
   components: {
@@ -131,8 +134,8 @@ export default {
         keyword: '',
         // 默认是综合且降序
         order: '1:asc',
-        pageNo: 1,
-        pageSize: 10,
+        pageNo: 8,
+        pageSize: 1,
         props: [],
         trademark: ''
       }
@@ -234,6 +237,12 @@ export default {
         }
       } */
       //#endregion
+    },
+    // 自定义事件的回调---切换页码
+    getPageNo(pageNo) {
+      this.searchList.pageNo = pageNo
+      // 再次发请求
+      this.getSearchData()
     }
   },
   computed: {
@@ -249,7 +258,10 @@ export default {
     },
     isDesc() {
       return this.searchList.order.indexOf('desc') != -1
-    }
+    },
+    ...mapState({
+      total: (state) => state.search.searchList.total
+    })
   },
   // 因为mounted只是组件挂载完毕执行一次,再次点击查询按钮或者传递参数就不会再发请求了，这样我们需要监听路由的变化,当路由里面的参数发生变化时，再次发起请求
   watch: {

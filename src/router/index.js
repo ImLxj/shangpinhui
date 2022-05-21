@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/Home'
-import Search from '@/views/Search'
-import Login from '@/views/Login'
-import Register from '@/views/Register'
+import routes from '@/router/routes'
 
 // 使用插件
 Vue.use(VueRouter)
@@ -47,20 +44,6 @@ VueRouter.prototype.replace = function (location, resolve, reject) {
     )
   }
 }
-
-const routes = [
-  { path: '/', redirect: '/home' },
-  { path: '/home', component: Home, meta: { show: true } },
-  {
-    // 在params后面加一个问好表示可传可不传
-    path: '/search/:keyword?',
-    name: 'search',
-    component: Search,
-    meta: { show: true }
-  },
-  { path: '/login', component: Login, meta: { show: false } },
-  { path: '/register', component: Register, meta: { show: false } }
-]
 
 const router = new VueRouter({
   routes
